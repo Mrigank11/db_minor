@@ -1,0 +1,25 @@
+{{define "content"}}
+<div class="container">
+<h1>Items</h1>
+ <table>
+        <thead>
+          <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Remaining</th>
+              <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+						{{range .Data}}
+            <tr>
+								<td>{{.Name}}</td>
+								<td>₹ {{.Price}}</td>
+								<td>{{.Remaining}}</td>
+								<td><a href="/to_cart/{{.ID}}" class="btn-small"><i class="material-icons">add</i></a></td>
+            </tr>
+						{{end}}
+        </tbody>
+    </table>
+</div>
+{{end}}

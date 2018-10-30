@@ -1,0 +1,35 @@
+{{define "content"}}
+<div class="row">
+    <div class="col push-s4 s4 z-depth-4 card-panel">
+			{{range .Flashes}}
+				<div class="card-panel red darken-1">
+					{{.}}
+				</div>
+			{{end}}
+        <form method="POST">
+            <div class="row center">
+                <h2 class="center login-form-text">Login</h2>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">person</i>
+                    <input autofocus name="username" type="text" required>
+                    <label for="username" class="center-align">Username</label>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">lock</i>
+                    <input name="password" type="password" required>
+                    <label for="password">Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <button type="submit" class="btn waves-effect waves-light col s12">Login</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}
