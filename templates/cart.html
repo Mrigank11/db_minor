@@ -10,18 +10,14 @@
         <thead>
           <tr>
               <th>Name</th>
-              <th>Price</th>
-              <th>Remaining</th>
               <th>Actions</th>
           </tr>
         </thead>
         <tbody>
 						{{range .Data}}
             <tr>
-								<td>{{.Name}}</td>
-								<td>₹ {{.Price}}</td>
-								<td>{{.Remaining}}</td>
-								<td><a href="/to_cart/{{.ID}}" class="btn-small"><i class="material-icons">add</i></a></td>
+								<td>{{.}}</td>
+								<td><a href="/rm_from_cart/{{.}}" class="btn-small red"><i class="material-icons">remove</i></a></td>
             </tr>
 						{{end}}
         </tbody>

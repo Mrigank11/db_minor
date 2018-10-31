@@ -7,12 +7,12 @@ import (
 )
 
 var (
-	db  *sql.DB
+	DB  *sql.DB
 	err error
 )
 
 func Query(q string, args ...interface{}) (rows *sql.Rows) {
-	rows, err := db.Query(q, args...)
+	rows, err := DB.Query(q, args...)
 	if err != nil {
 		log.Error("Failed to execute query", err)
 		return nil
@@ -21,7 +21,7 @@ func Query(q string, args ...interface{}) (rows *sql.Rows) {
 }
 
 func init() {
-	db, err = sql.Open("mysql", "root:root@/db_minor")
+	DB, err = sql.Open("mysql", "root:root@/db_minor")
 	if err != nil {
 		log.Fatal(err)
 	}

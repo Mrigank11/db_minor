@@ -53,11 +53,20 @@ create  table sale(
 );
     
 create  table cart(
-	cart_id int null ,
+	cart_id int auto_increment primary key not null ,
     transaction_id int ,
     user_id varchar(100) not null,
     foreign key(transaction_id) references sale(transaction_id) ,
     foreign key(user_id) references users(username)
+);
+
+create table cart_items(
+	cart_id int not null ,
+    product_id int not null ,
+    added_on datetime DEFAULT CURRENT_TIMESTAMP,
+    foreign key(product_id) references products(product_id) ,
+	foreign key(cart_id) references cart(cart_id),
+    PRIMARY KEY( `cart_id`, `product_id`)
 );
     
 insert into role(display_name)  values

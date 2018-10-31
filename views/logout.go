@@ -8,6 +8,7 @@ import (
 func Logout(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "session")
 	delete(session.Values, "username")
+	session.AddFlash("Logout Success")
 	session.Save(r, w)
 	http.Redirect(w, r, "/", 302)
 }
