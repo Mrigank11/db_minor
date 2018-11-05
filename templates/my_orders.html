@@ -1,0 +1,28 @@
+{{define "content"}}
+<div class="container">
+{{range .Flashes}}
+	<div class="card-panel blue lighten-3">
+		{{.}}
+	</div>
+{{end}}
+<h1>My Orders</h1>
+ <table>
+        <thead>
+          <tr>
+              <th>TID</th>
+              <th>Amount</th>
+              <th>Order date</th>
+          </tr>
+        </thead>
+        <tbody>
+						{{range .Data}}
+            <tr>
+								<td><a href="/view_old_cart/{{.TID}}">{{.TID}}</a></td>
+								<td>₹ {{.Amount}}</td>
+								<td>{{.Date}}</td>
+            </tr>
+						{{end}}
+        </tbody>
+    </table>
+</div>
+{{end}}

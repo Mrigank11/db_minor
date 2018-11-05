@@ -5,7 +5,9 @@
 		{{.}}
 	</div>
 {{end}}
-<h1>Items</h1>
+<h1>{{.Data.Tag.Name}}</h1>
+<p>{{.Data.Tag.Description}}</p>
+<hr>
  <table>
         <thead>
           <tr>
@@ -16,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-						{{range .Data}}
+						{{range .Data.Products}}
             <tr>
 								<td><a href="/view_item/{{.ID}}">{{.Name}}</a></td>
 								<td>₹ {{.Price}}</td>

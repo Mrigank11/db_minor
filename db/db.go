@@ -14,7 +14,7 @@ var (
 func Query(q string, args ...interface{}) (rows *sql.Rows) {
 	rows, err := DB.Query(q, args...)
 	if err != nil {
-		log.Error("Failed to execute query", err)
+		log.Error("Failed to execute query: ", q, args, err)
 		return nil
 	}
 	return rows

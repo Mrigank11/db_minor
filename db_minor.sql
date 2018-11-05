@@ -47,14 +47,14 @@ create  table stock(
 );
     
 create  table sale(
-	transaction_id int not null primary key,
+	transaction_id varchar(255) not null primary key,
 	amount int ,
-    sale_date datetime
+    sale_date timestamp default current_timestamp
 );
     
 create  table cart(
 	cart_id int auto_increment primary key not null ,
-    transaction_id int ,
+    transaction_id varchar(255),
     user_id varchar(100) not null,
     foreign key(transaction_id) references sale(transaction_id) ,
     foreign key(user_id) references users(username)
@@ -69,22 +69,35 @@ create table cart_items(
     PRIMARY KEY( `cart_id`, `product_id`)
 );
     
+-- DATA DUMP
 insert into role(display_name)  values
 	('admin'),
     ('customer');
 
 insert into users(username, password, role_id) values("admin", "$2a$10$K3pP8EONwz1bQJ/AyFImu.T.uNa7VeY/8LFGHltcRjDKg002sob16", 1);
+insert into cart values(NULL, NULL, "admin");
 
 insert into products values
 	(NULL, "Pen", "a pen"),
     (NULL, "Pencil", "a pencil"),
-    (NULL, "Rubber", "a rubber");
+    (NULL, "Rubber", "a rubber"),
+    (NULL, "Burger", "a big burger.");
 insert into stock values
-	(NULL, 1 , 40, "amazon"),
-    (NULL, 1 , 30, "azon"),
-    (NULL, 2 , 40, "amazon");
+	(NULL, 1, 40, "amazon"),
+    (NULL, 1, 30, "azon"),
+    (NULL, 2, 40, "amazon"),
+    (NULL, 4, 10, "bakery");
     
--- query for listing products with best price
+insert into tag values
+	(NULL, "stationary", "some description for stationary"),
+    (NULL, "edible", "to fill tummy"),
+    (NULL, "unhealthy", "don't eat it!");
+
+insert into product_tags values
+	(1,1),(2,1), (3,1) ,(4,2),(4,3);
+    
+-- view for listing products with best price
+create view products_with_best_prices as 
 select p.*, s.price, s.dealer, count(s1.price) from products p left join stock s on s.stock_id = (
 	select stock_id from stock s_
     where s_.product_id = p.product_id
@@ -93,3 +106,28 @@ select p.*, s.price, s.dealer, count(s1.price) from products p left join stock s
 ) 
 left join stock s1 on s1.product_id = p.product_id
 group by p.product_id;
+
+-- query for listing items in a cart
+select p.* from cart_items c inner join products_with_best_prices p on p.product_id = c.product_id and cart_id=1 ;
+-- query to show all tags for an item
+select t.* from product_tags pt 
+join products p on p.product_id = pt.product_id and p.product_id = 3
+join tag t on t.tag_id = pt.tag_id;
+-- query to show all products with a certain tag
+select ps.* from products_with_best_prices ps
+join product_tags p on p.product_id = ps.product_id
+join tag t on t.tag_id = p.tag_id and t.tag_id = 1;
+
+-- query to get sum of items in a cart
+select sum(p.price) from cart_items c inner join products_with_best_prices p on p.product_id = c.product_id and cart_id=1 ;
+
+-- query to get all past orders
+select s.* from sale s
+join cart c on s.transaction_id = c.transaction_id
+join users u on u.username = c.user_id and u.username = "admin" ;
+
+-- query to get cart with TID
+select p.*, s.amount from sale s
+join cart c on s.transaction_id = c.transaction_id and c.transaction_id = "MRAjWwhTHc"
+join cart_items ci on ci.cart_id = c.cart_id
+join products p on p.product_id = ci.product_id;

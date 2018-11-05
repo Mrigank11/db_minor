@@ -8,20 +8,24 @@ import (
 )
 
 func Cart(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "session")
-	rows := db.Query("select cart_id from cart where user_id = ? and transaction_id is NULL", session.Values["username"])
-	rows.Next()
-	var cart_id int
-	rows.Scan(&cart_id)
+	cart_id := getCartId(r)
 
-	rows = db.Query("select product_id from cart_items where cart_id = ?", cart_id)
-	var products []string
+	rows := db.Query("select p.* from cart_items c inner join products_with_best_prices p on p.product_id = c.product_id and cart_id=?", cart_id)
+	var products []product
 	//load products
 	for rows.Next() {
-		var item_id string
-		rows.Scan(&item_id)
-		products = append(products, item_id)
+		var p product
+		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price, &p.Dealer, &p.Remaining)
+		products = append(products, p)
+	}
+
+	total := 0.0
+	for i := range products {
+		total += products[i].Price
 	}
 	//finally render
-	renderTemplate(w, r, "cart", products)
+	renderTemplate(w, r, "cart", map[string]interface{}{
+		"Total":    total,
+		"Products": products,
+	})
 }

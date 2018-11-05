@@ -10,16 +10,26 @@
         <thead>
           <tr>
               <th>Name</th>
+              <th>Seller</th>
+              <th>Price</th>
               <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-						{{range .Data}}
+						{{range .Data.Products}}
             <tr>
-								<td>{{.}}</td>
-								<td><a href="/rm_from_cart/{{.}}" class="btn-small red"><i class="material-icons">remove</i></a></td>
+								<td> <a href="/view_item/{{.ID}}">{{.Name}}</a> </td>
+								<td>{{.Dealer}}</td>
+								<td>₹ {{.Price}}</td>
+								<td><a href="/rm_from_cart/{{.ID}}" class="btn-small red"><i class="material-icons">remove</i></a></td>
             </tr>
 						{{end}}
+						<tr>
+							<td><b>Total</b></td>
+							<td></td>
+							<td><b>₹ {{.Data.Total}}</b></td>
+							<td><a href="/checkout"> <button class="btn-small" >Checkout</button></a></td>
+						</tr>
         </tbody>
     </table>
 </div>

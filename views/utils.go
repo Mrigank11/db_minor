@@ -2,9 +2,11 @@ package views
 
 import (
 	"fmt"
+	"github.com/Mrigank11/db_minor/db"
 	"github.com/gorilla/sessions"
 	log "github.com/sirupsen/logrus"
 	"html/template"
+	"math/rand"
 	"net/http"
 )
 
@@ -31,4 +33,23 @@ func RequiresLogin(handler func(http.ResponseWriter, *http.Request, string)) fun
 			http.Redirect(w, r, "/", 302)
 		}
 	}
+}
+
+func getCartId(r *http.Request) int {
+	session, _ := store.Get(r, "session")
+	rows := db.Query("select cart_id from cart where user_id = ? and transaction_id is NULL", session.Values["username"])
+	rows.Next()
+	var cart_id int
+	rows.Scan(&cart_id)
+	return cart_id
+}
+
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func randSeq(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }

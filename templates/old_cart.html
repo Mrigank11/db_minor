@@ -10,20 +10,18 @@
         <thead>
           <tr>
               <th>Name</th>
-              <th>Price</th>
-              <th>Remaining</th>
-              <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-						{{range .Data}}
+						{{range .Data.Products}}
             <tr>
-								<td><a href="/view_item/{{.ID}}">{{.Name}}</a></td>
-								<td>₹ {{.Price}}</td>
-								<td>{{.Remaining}}</td>
-								<td><a href="/to_cart/{{.ID}}" class="btn-small"><i class="material-icons">add</i></a></td>
+								<td> <a href="/view_item/{{.ID}}">{{.Name}}</a> </td>
             </tr>
 						{{end}}
+						<tr>
+							<td><b>Total</b></td>
+							<td><b>₹ {{.Data.Total}}</b></td>
+						</tr>
         </tbody>
     </table>
 </div>
