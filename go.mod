@@ -9,7 +9,9 @@ require (
 	github.com/derekparker/delve v1.1.0 // indirect
 	github.com/fatih/gomodifytags v0.0.0-20180914191908-141225bf62b6 // indirect
 	github.com/fatih/motion v0.0.0-20180408211639-218875ebe238 // indirect
+	github.com/go-bindata/go-bindata v1.0.0 // indirect
 	github.com/go-sql-driver/mysql v1.4.0
+	github.com/gobuffalo/packr v1.19.0
 	github.com/google/shlex v0.0.0-20150127133951-6f45313302b9 // indirect
 	github.com/gorilla/mux v1.6.2
 	github.com/gorilla/sessions v1.1.3
@@ -24,8 +26,6 @@ require (
 	github.com/peterh/liner v1.1.0 // indirect
 	github.com/rogpeppe/godef v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.1.1
-	github.com/spf13/cobra v0.0.3 // indirect
-	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/zmb3/gogetdoc v0.0.0-20181009153131-0d07153cccef // indirect
 	golang.org/x/arch v0.0.0-20180920145803-b19384d3c130 // indirect
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
