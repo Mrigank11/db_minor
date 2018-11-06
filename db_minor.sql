@@ -47,14 +47,14 @@ create  table stock(
 );
     
 create  table sale(
-	transaction_id varchar(255) not null primary key,
+	transaction_id varchar(10) not null primary key,
 	amount int ,
     sale_date timestamp default current_timestamp
 );
     
 create  table cart(
 	cart_id int auto_increment primary key not null ,
-    transaction_id varchar(255),
+    transaction_id varchar(10),
     user_id varchar(100) not null,
     foreign key(transaction_id) references sale(transaction_id) ,
     foreign key(user_id) references users(username)
