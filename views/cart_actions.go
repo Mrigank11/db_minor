@@ -32,26 +32,26 @@ func RmFromCart(w http.ResponseWriter, r *http.Request, username string) {
 	http.Redirect(w, r, "/cart", 302)
 }
 
+///checkout cart
+///this essentially means setting the transaction_id
+///to the active user cart.
+///MySQL triggers will handle the rest.
 func CheckoutCart(w http.ResponseWriter, r *http.Request, username string) {
 	session, _ := store.Get(r, "session")
 	cart_id := getCartId(r)
 
-	var amount float64
-	row := db.Query("select sum(p.price) from cart_items c inner join products_with_best_prices p on p.product_id = c.product_id and cart_id=?", cart_id)
-	if row.Next() {
-		row.Scan(&amount)
-	}
-
 	//ideally, this will be sent by the payment gateway
 	transaction_id := randSeq(10)
-	log.Info("transaction created ", transaction_id)
-	db.Query("insert into sale(transaction_id, amount) values(?, ?)", transaction_id, amount)
-	db.Query("update cart set transaction_id=? where cart_id=?", transaction_id, cart_id)
+	_, err := db.DB.Query("update cart set transaction_id=? where cart_id=?", transaction_id, cart_id)
+	if err != nil {
+		log.Error(err)
+		session.AddFlash(err.Error())
+	} else {
+		_ = db.Query("insert into cart(user_id) values(?)", username)
+		log.Info("transaction created ", transaction_id)
+		session.AddFlash("Cart checked out successfully")
+	}
 
-	//TODO: do this with triggers
-	_ = db.Query("insert into cart(user_id) values(?)", username)
-
-	session.AddFlash("Cart checked out successfully")
 	session.Save(r, w)
 	http.Redirect(w, r, "/", 302)
 }

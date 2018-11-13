@@ -98,7 +98,7 @@ insert into product_tags values
     
 -- view for listing products with best price
 create view products_with_best_prices as 
-select p.*, s.price, s.dealer, count(s1.price) from products p left join stock s on s.stock_id = (
+select p.*, s.price, s.dealer, count(s1.price), s.stock_id from products p left join stock s on s.stock_id = (
 	select stock_id from stock s_
     where s_.product_id = p.product_id
     order by s_.price asc
@@ -131,3 +131,34 @@ select p.*, s.amount from sale s
 join cart c on s.transaction_id = c.transaction_id and c.transaction_id = "MRAjWwhTHc"
 join cart_items ci on ci.cart_id = c.cart_id
 join products p on p.product_id = ci.product_id;
+
+-- trigger for handling cart checkout
+delimiter $$
+create trigger cart_checkout
+before update on cart
+for each row
+begin
+-- declare
+declare available_item_count, wanted_item_count, amount int;
+-- check if all items are available
+select count(distinct(s.product_id)) into available_item_count from cart_items ci
+join stock s on s.product_id = ci.product_id and ci.cart_id=NEW.cart_id;
+
+select count(distinct(ci.product_id)) into wanted_item_count from cart_items ci where ci.cart_id=NEW.cart_id;
+
+if available_item_count < wanted_item_count then
+	signal sqlstate '45000' set message_text = 'Some items are not available';	
+else
+	select sum(pp.price) into amount from cart_items ci
+	join products_with_best_prices pp on ci.product_id = pp.product_id and cart_id=NEW.cart_id;
+    
+    -- delete stock
+	delete s from stock s, products_with_best_prices p, cart_items ci 
+	where s.stock_id = p.stock_id
+	and ci.product_id = p.product_id and ci.cart_id=NEW.cart_id;
+    
+	-- create sale
+	insert into sale(transaction_id, amount) values(NEW.transaction_id, amount);
+end if;
+end$$
+delimiter ;

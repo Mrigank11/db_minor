@@ -1,6 +1,7 @@
 package views
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/Mrigank11/db_minor/db"
 	"github.com/gorilla/sessions"
@@ -58,4 +59,17 @@ func randSeq(n int) string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+func getProductList(rows *sql.Rows) []product {
+	var products []product
+	//load products
+	for rows.Next() {
+		var p product
+		var sid int
+		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price, &p.Dealer, &p.Remaining, &sid)
+		products = append(products, p)
+	}
+
+	return products
 }

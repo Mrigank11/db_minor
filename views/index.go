@@ -18,13 +18,7 @@ type product struct {
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	rows := db.Query(`select * from products_with_best_prices;`)
-	var products []product
-	//load products
-	for rows.Next() {
-		var p product
-		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price, &p.Dealer, &p.Remaining)
-		products = append(products, p)
-	}
+	products := getProductList(rows)
 	//finally render
 	renderTemplate(w, r, "home", products)
 }
