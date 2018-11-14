@@ -36,7 +36,8 @@ func ViewItem(w http.ResponseWriter, r *http.Request) {
 	var product product
 	//load products
 	if rows.Next() {
-		rows.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Dealer, &product.Remaining)
+		var sid int
+		rows.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Dealer, &product.Remaining, &sid)
 	}
 	//finally render
 	renderTemplate(w, r, "item", map[string]interface{}{

@@ -9,15 +9,17 @@ import (
 	"html/template"
 	"math/rand"
 	"net/http"
+	"path/filepath"
 )
 
 var store = sessions.NewCookieStore([]byte("super secret key"))
+var rootDir, _ = filepath.Abs("./")
 
 func renderTemplate(w http.ResponseWriter, r *http.Request, name string, data interface{}) {
 	session, _ := store.Get(r, "session")
 	t := template.New("")
 	files := []string{"layout/base.html", "layout/footer.html", "layout/nav.html", fmt.Sprintf("%s.html", name)}
-	for i:= range files{
+	for i := range files {
 		h, _ := Asset(fmt.Sprintf("templates/%s", files[i]))
 		t.Parse(string(h))
 	}

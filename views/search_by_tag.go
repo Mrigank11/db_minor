@@ -25,13 +25,7 @@ func SearchByTag(w http.ResponseWriter, r *http.Request) {
 		join tag t on t.tag_id = p.tag_id and t.tag_id = ?;
 	`, tag_id)
 
-	var products []product
-	//load products
-	for rows.Next() {
-		var p product
-		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price, &p.Dealer, &p.Remaining)
-		products = append(products, p)
-	}
+	products := getProductList(rows)
 	//finally render
 	renderTemplate(w, r, "tag_search", map[string]interface{}{
 		"Tag":      p,

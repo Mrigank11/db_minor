@@ -52,7 +52,7 @@ create  table sale(
     sale_date timestamp default current_timestamp
 );
     
-create  table cart(
+create table cart(
 	cart_id int auto_increment primary key not null ,
     transaction_id varchar(10),
     user_id varchar(100) not null,
@@ -64,6 +64,7 @@ create table cart_items(
 	cart_id int not null ,
     product_id int not null ,
     added_on datetime DEFAULT CURRENT_TIMESTAMP,
+    quantity int default 1,
     foreign key(product_id) references products(product_id) ,
 	foreign key(cart_id) references cart(cart_id),
     PRIMARY KEY( `cart_id`, `product_id`)
@@ -146,8 +147,11 @@ join stock s on s.product_id = ci.product_id and ci.cart_id=NEW.cart_id;
 
 select count(distinct(ci.product_id)) into wanted_item_count from cart_items ci where ci.cart_id=NEW.cart_id;
 
-if available_item_count < wanted_item_count then
-	signal sqlstate '45000' set message_text = 'Some items are not available';	
+if wanted_item_count = 0 then
+	signal sqlstate '45000' set message_text = 'Cart cannot be empty.';
+    
+elseif available_item_count < wanted_item_count then
+	signal sqlstate '45000' set message_text = 'Some items are not available.';	
 else
 	select sum(pp.price) into amount from cart_items ci
 	join products_with_best_prices pp on ci.product_id = pp.product_id and cart_id=NEW.cart_id;
